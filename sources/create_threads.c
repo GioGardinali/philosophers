@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:53:31 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/28 00:10:30 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/28 01:30:39 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void	cleanup(t_data *data)
 		i++;
 	}
 	pthread_mutex_destroy(&data->print_lock);
+	pthread_mutex_destroy(&data->meal_check_lock);
 	free(data->forks);
 	free(data->philosophers);
 }

@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:47:51 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/28 00:06:39 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/28 01:27:28 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,13 @@ void	*philosopher_routine(void *arg)
 {
 	t_philo	*philo;
 	t_data	*data;
+	int		all_ate_enough;
+	int		i;
 
 	philo = (t_philo *)arg;
 	data = (t_data *)(philo + philo->id - 1);
+	all_ate_enough = 1;
+	i = 0;
 	while (!data->stop_simulation)
 	{
 		// Thinking
@@ -33,7 +37,27 @@ void	*philosopher_routine(void *arg)
 		print_status(data, philo->id, "is eating");
 		philo->last_meal = get_timestamp();
 		usleep(data->time_to_eat * 1000);
+		pthread_mutex_lock(&data->meal_check_lock);
+		philo->meals_eaten++;
+		if (data->num_meals != -1 && philo->meals_eaten >= data->num_meals) {
+			while (i < data->num_philosophers)
+			{
+				if (data->philosophers[i].meals_eaten < data->num_meals)
+				{
+					all_ate_enough = 0;
+					break ;
+				}
+				i++;
+			}
+			if (all_ate_enough)
+			{
+				data->stop_simulation = 1;
+			}
+		}
+		pthread_mutex_unlock(&data->meal_check_lock);
 		// Putting down forks
+		pthread_mutex_unlock(philo->right_fork);
+		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
 		// Sleeping

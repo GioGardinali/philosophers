@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:39:28 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/28 00:05:58 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/28 01:28:31 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_data
 	long			time_to_sleep;
 	int				num_meals;
 	pthread_mutex_t	print_lock;
+	pthread_mutex_t	meal_check_lock;
 	t_philo			*philosophers;
 	pthread_mutex_t	*forks;
 	int				stop_simulation;
