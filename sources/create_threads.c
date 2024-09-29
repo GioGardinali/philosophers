@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:53:31 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/28 01:30:39 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/29 03:49:23 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_status(t_data *data, int id, const char *status)
 
 int	init_data(t_data *data, int argc, char **argv)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (argc < 5 || argc > 6)
@@ -59,7 +59,7 @@ int	init_data(t_data *data, int argc, char **argv)
 	}
 	if (data->num_philosophers <= 0 || data->time_to_die < 60
 		|| data->time_to_eat < 60 || data->time_to_sleep < 60)
-	{
+		{
 		print_error("Invalid arguments\n");
 		return (1);
 	}
@@ -67,6 +67,7 @@ int	init_data(t_data *data, int argc, char **argv)
 	data->philosophers = malloc(data->num_philosophers * sizeof(t_philo));
 	data->stop_simulation = 0;
 	pthread_mutex_init(&data->print_lock, NULL);
+	pthread_mutex_init(&data->meal_check_lock, NULL); // Inicialização adicionada
 	while (i < data->num_philosophers)
 	{
 		pthread_mutex_init(&data->forks[i], NULL);
@@ -88,6 +89,7 @@ void	create_threads(t_data *data)
 		data->philosophers[i].right_fork = &data->forks[(i + 1)
 			% data->num_philosophers];
 		data->philosophers[i].last_meal = get_timestamp();
+		data->philosophers[i].data = data; // Adicionado para acessar os dados globais
 		pthread_create(&data->philosophers[i].thread, NULL,
 			philosopher_routine, &data->philosophers[i]);
 		i++;

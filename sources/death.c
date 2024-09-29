@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:50:48 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/28 00:08:08 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/29 03:44:09 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*monitor_routine(void *arg)
 	int		i;
 
 	data = (t_data *)arg;
-	while (1)
+	while (!data->stop_simulation)
 	{
 		i = 0;
 		while (i < data->num_philosophers)

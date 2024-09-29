@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:39:28 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/28 01:28:31 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/29 03:50:57 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_philo
 	pthread_mutex_t	*right_fork;
 	long			last_meal;
 	int				meals_eaten;
+	struct s_data	*data; // Adicionado para acessar os dados globais
 }	t_philo;
 
 typedef struct s_data
