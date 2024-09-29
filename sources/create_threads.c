@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:53:31 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/29 03:49:23 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/29 05:40:42 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ long	get_timestamp(void)
 void	print_status(t_data *data, int id, const char *status)
 {
 	pthread_mutex_lock(&data->print_lock);
-	printf("%ld %d %s\n", get_timestamp(), id, status);
+	if (!data->stop_simulation)
+		printf("%9ld %d %s\n", get_timestamp() - data->start_threads, id, status);
 	pthread_mutex_unlock(&data->print_lock);
 }
 
@@ -66,11 +67,13 @@ int	init_data(t_data *data, int argc, char **argv)
 	data->forks = malloc(data->num_philosophers * sizeof(pthread_mutex_t));
 	data->philosophers = malloc(data->num_philosophers * sizeof(t_philo));
 	data->stop_simulation = 0;
+	data->start_threads = 0;
 	pthread_mutex_init(&data->print_lock, NULL);
 	pthread_mutex_init(&data->meal_check_lock, NULL); // Inicialização adicionada
 	while (i < data->num_philosophers)
 	{
 		pthread_mutex_init(&data->forks[i], NULL);
+		usleep(1000);
 		i++;
 	}
 	return (0);
@@ -86,8 +89,11 @@ void	create_threads(t_data *data)
 	{
 		data->philosophers[i].id = i + 1;
 		data->philosophers[i].left_fork = &data->forks[i];
-		data->philosophers[i].right_fork = &data->forks[(i + 1)
-			% data->num_philosophers];
+		if (data->num_philosophers > 1)
+			data->philosophers[i].right_fork = &data->forks[(i + 1)	% data->num_philosophers];
+		else
+			data->philosophers[i].right_fork = NULL;
+		data->start_threads = get_timestamp();
 		data->philosophers[i].last_meal = get_timestamp();
 		data->philosophers[i].data = data; // Adicionado para acessar os dados globais
 		pthread_create(&data->philosophers[i].thread, NULL,

@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:39:28 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/29 03:50:57 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/29 05:22:22 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				num_philosophers;
+	long			start_threads;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
