@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
+# include <stdbool.h>
 
 typedef struct s_philo
 {
@@ -50,6 +51,7 @@ void	print_status(t_data *data, int id, const char *status);
 void	*philosopher_routine(void *arg);
 void	*monitor_routine(void *arg);
 int		init_data(t_data *data, int argc, char **argv);
+bool	check_meals_eanten(int meals_eaten, int num_meals);
 void	create_threads(t_data *data);
 void	cleanup(t_data *data);
 

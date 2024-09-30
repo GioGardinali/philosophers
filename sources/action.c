@@ -12,18 +12,23 @@
 
 #include "../include/philo.h"
 
+bool	check_meals_eanten(int meals_eaten, int num_meals)
+{
+	if (num_meals && meals_eaten >= num_meals)
+	{
+		return (true);
+	}
+	return (false);
+}
+
 void	*philosopher_routine(void *arg)
 {
 	t_philo	*philo;
 	t_data	*data;
-	int		all_ate_enough;
-	int		i;
 
 	philo = (t_philo *)arg;
 	data = philo->data; // Corrigido para acessar a estrutura de dados correta
-	all_ate_enough = 1;
-	i = 0;
-	while (!data->stop_simulation)
+	while (!data->stop_simulation && !check_meals_eanten(philo->meals_eaten, data->num_meals))
 	{
 		// Thinking
 		print_status(data, philo->id, "is thinking");
