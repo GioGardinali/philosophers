@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:50:48 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/29 05:50:47 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/09/30 21:08:31 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,23 @@ void	*monitor_routine(void *arg)
 		{
 			if (check_meals_eanten(data->philosophers[i].meals_eaten, data->num_meals))
 				philos_end[i] = data->philosophers[i].id;
-			else if (get_timestamp() - data->philosophers[i].last_meal
+			pthread_mutex_lock(&data->philosophers[i].m_last_meal);
+			if (get_timestamp() - data->philosophers[i].last_meal
 				> data->time_to_die)
 			{
-				print_status(data, data->philosophers[i].id, "died");
+				pthread_mutex_unlock(&data->philosophers[i].m_last_meal);
+				pthread_mutex_lock(&data->mutex_death);
 				data->stop_simulation = 1;
+				pthread_mutex_lock(&data->print_lock);
+				printf("%9ld %d died\n", get_timestamp() - data->start_threads,
+					data->philosophers[i].id);
+				pthread_mutex_unlock(&data->print_lock);
+				pthread_mutex_unlock(&data->mutex_death);
 				return (NULL);
 			}
+			pthread_mutex_unlock(&data->philosophers[i].m_last_meal);
+
+
 		}
 		usleep(1000);
 	}
