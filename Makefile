@@ -26,6 +26,7 @@ sources/create_threads.c\
 sources/death.c\
 sources/main.c\
 sources/utils.c\
+sources/init_mutex.c\
 
 #--------------RULES----------------------------#
 

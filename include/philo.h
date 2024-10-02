@@ -6,7 +6,7 @@
 /*   By: gigardin <gigardin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 22:39:28 by gigardin          #+#    #+#             */
-/*   Updated: 2024/09/30 20:52:31 by gigardin         ###   ########.fr       */
+/*   Updated: 2024/10/02 20:25:15 by gigardin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,17 @@ typedef struct s_data
 }	t_data;
 
 long	get_timestamp(void);
+bool	check_meals_eanten(int meals_eaten, int num_meals, int stop);
 void	print_status(t_data *data, int id, const char *status);
+void	take_forks_and_eat(t_philo *philo, t_data *data,
+			pthread_mutex_t *first, pthread_mutex_t *second);
+void	check_philosopher_death(t_data *data, int *philos_end);
 void	*philosopher_routine(void *arg);
 void	*monitor_routine(void *arg);
+int		init_mutexes_check(t_data *data);
+void	init_data_values(t_data *data, int argc, char **argv);
+void	init_philosophers(t_data *data);
 int		init_data(t_data *data, int argc, char **argv);
-bool	check_meals_eanten(int meals_eaten, int num_meals);
 void	create_threads(t_data *data);
 void	cleanup(t_data *data);
 
