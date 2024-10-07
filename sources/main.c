@@ -17,9 +17,7 @@ int	main(int argc, char **argv)
 	t_data	data;
 
 	if (init_data(&data, argc, argv) != 0)
-	{
 		return (1);
-	}
 	create_threads(&data);
 	cleanup(&data);
 	return (0);

@@ -27,6 +27,8 @@ typedef struct s_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	m_last_meal;
+	pthread_mutex_t	meal_check_lock;
+	long			start_threads;
 	long			last_meal;
 	int				meals_eaten;
 	struct s_data	*data; // Adicionado para acessar os dados globais
@@ -35,13 +37,11 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				num_philosophers;
-	long			start_threads;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	int				num_meals;
 	pthread_mutex_t	print_lock;
-	pthread_mutex_t	meal_check_lock;
 	pthread_mutex_t mutex_death;
 	t_philo			*philosophers;
 	pthread_mutex_t	*forks;
@@ -49,10 +49,11 @@ typedef struct s_data
 }	t_data;
 
 long	get_timestamp(void);
-bool	check_meals_eanten(int meals_eaten, int num_meals, int stop);
+bool	check_meals_eanten(int meals_eaten, int num_meals, t_data *data, t_philo *philo);
+bool	check_is_death(t_data *data);
 void	print_status(t_data *data, int id, const char *status);
-void	take_forks_and_eat(t_philo *philo, t_data *data,
-			pthread_mutex_t *first, pthread_mutex_t *second);
+void	take_forks_and_eat(t_philo *philo, t_data *data, \
+			pthread_mutex_t **first, pthread_mutex_t **second);
 void	check_philosopher_death(t_data *data, int *philos_end);
 void	*philosopher_routine(void *arg);
 void	*monitor_routine(void *arg);

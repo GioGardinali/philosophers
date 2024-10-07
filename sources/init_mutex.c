@@ -41,7 +41,6 @@ void	init_data_values(t_data *data, int argc, char **argv)
 	else
 		data->num_meals = 0;
 	data->stop_simulation = 0;
-	data->start_threads = 0;
 }
 
 int	init_mutexes_check(t_data *data)
@@ -54,7 +53,6 @@ int	init_mutexes_check(t_data *data)
 		return (1);
 	}
 	pthread_mutex_init(&data->print_lock, NULL);
-	pthread_mutex_init(&data->meal_check_lock, NULL);
 	pthread_mutex_init(&data->mutex_death, NULL);
 	return (0);
 }
@@ -68,6 +66,7 @@ void	init_philosophers(t_data *data)
 	{
 		pthread_mutex_init(&data->forks[i], NULL);
 		pthread_mutex_init(&data->philosophers[i].m_last_meal, NULL);
+		pthread_mutex_init(&data->philosophers[i].meal_check_lock, NULL);
 		i++;
 	}
 }

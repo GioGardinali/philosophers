@@ -41,18 +41,18 @@ void	check_philosopher_death(t_data *data, int *philos_end)
 	while (++i < data->num_philosophers)
 	{
 		if (check_meals_eanten(data->philosophers[i].meals_eaten,
-				data->num_meals, data->stop_simulation))
+				data->num_meals, data, &data->philosophers[i]))
 			philos_end[i] = data->philosophers[i].id;
 		pthread_mutex_lock(&data->philosophers[i].m_last_meal);
-		if (get_timestamp() - data->philosophers[i].last_meal
-			> data->time_to_die)
+		if (!check_is_death(data) && (get_timestamp() - data->philosophers[i].last_meal
+			> data->time_to_die))
 		{
 			pthread_mutex_unlock(&data->philosophers[i].m_last_meal);
 			pthread_mutex_lock(&data->mutex_death);
-			data->stop_simulation = 1;
 			pthread_mutex_lock(&data->print_lock);
-			printf("%9ld %d died\n", get_timestamp() - data->start_threads,
+			printf("%9ld %d died\n", get_timestamp() - data->philosophers[i].start_threads,
 				data->philosophers[i].id);
+			data->stop_simulation = 1;
 			pthread_mutex_unlock(&data->print_lock);
 			pthread_mutex_unlock(&data->mutex_death);
 			return ;
@@ -68,7 +68,7 @@ void	*monitor_routine(void *arg)
 
 	data = (t_data *)arg;
 	init_arr_int(philos_end);
-	while (!data->stop_simulation && !check_full_end(philos_end,
+	while (!check_is_death(data) && !check_full_end(philos_end,
 			data->num_philosophers))
 	{
 		check_philosopher_death(data, philos_end);

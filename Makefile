@@ -35,8 +35,7 @@ OBJFILES = $(subst $(SOURCES),$(OBJFOLDER),$(SRC:.c=.o))
 all: $(OBJFOLDER) $(NAME)
 
 v: all
-	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --trace-children-skip='*/bin/*,*/sbin/*' --keep-debuginfo=yes \
-	--track-fds=yes -s ./$(NAME)
+	valgrind --tool=helgrind -s ./$(NAME)
 
 $(OBJFOLDER):
 	@mkdir -p $(OBJFOLDER)

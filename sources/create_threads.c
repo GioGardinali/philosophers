@@ -22,15 +22,13 @@ long	get_timestamp(void)
 
 void	print_status(t_data *data, int id, const char *status)
 {
-	pthread_mutex_lock(&data->mutex_death);
-	pthread_mutex_lock(&data->print_lock);
-	if (!data->stop_simulation)
+	if (!check_is_death(data))
 	{
-		printf("%9ld %d %s\n", get_timestamp() - data->start_threads,
+		pthread_mutex_lock(&data->print_lock);
+		printf("%9ld %d %s\n", get_timestamp() - data->philosophers[id - 1].start_threads,
 			id, status);
+		pthread_mutex_unlock(&data->print_lock);
 	}
-	pthread_mutex_unlock(&data->print_lock);
-	pthread_mutex_unlock(&data->mutex_death);
 }
 
 void	create_threads(t_data *data)
@@ -48,7 +46,7 @@ void	create_threads(t_data *data)
 				% data->num_philosophers];
 		else
 			data->philosophers[i].right_fork = NULL;
-		data->start_threads = get_timestamp();
+		data->philosophers[i].start_threads = get_timestamp();
 		data->philosophers[i].last_meal = get_timestamp();
 		data->philosophers[i].data = data; // Adicionado para acessar os dados globais
 		pthread_create(&data->philosophers[i].thread, NULL,
@@ -70,10 +68,10 @@ void	cleanup(t_data *data)
 	while (i < data->num_philosophers)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
+		pthread_mutex_destroy(&data->philosophers[i].meal_check_lock);
 		i++;
 	}
 	pthread_mutex_destroy(&data->print_lock);
-	pthread_mutex_destroy(&data->meal_check_lock);
 	free(data->forks);
 	free(data->philosophers);
 }
